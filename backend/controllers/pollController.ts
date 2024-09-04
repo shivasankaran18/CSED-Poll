@@ -1,21 +1,76 @@
-import {  PrismaClient } from "@prisma/client";
-const prisma=new PrismaClient();
+import { PrismaClient } from "@prisma/client";
+import { createPoll } from "../zod";
 
-const createPoll = async(req:any,res:any) =>{
+const prisma = new PrismaClient();
+
+
+const pollCreate = async(req:any,res:any) =>{
     try{
         const body = req.body;
-        
+        const parsing = createPoll.safeParse(body);
+        if(!parsing.success){
+            return res.json({success:false,message:"Type mismatch"})
+        }
+        if(body.instant == false){
+            const newPoll = await prisma.poll.create({
+                data:{
+                    title:body.title,
+                    description : body.description,
+                    Instant: body.instant,
+                    stdate:body.stdate,
+                    sttime:body.sttime,
+                    type:body.type,
+                    count:0,
+                    createdby:body.email
+                }
+            })
+            if (body.options.length > 0) {
+                const pollOptionsData = body.options.map((option: { name: string; reason: boolean }) => ({
+                  name: option.name,
+                  reason: option.reason,
+                  count: 0,
+                  pollid: newPoll.id,
+                }));
+          
+                await prisma.pollOptions.createMany({
+                  data: pollOptionsData,
+                });
+              }
+            return res.status(200).json({message:"Poll created Successfully"})
+        }
+        else{
+            const newPoll = await prisma.poll.create({
+                data:{
+                    title:body.title,
+                    description : body.description,
+                    Instant: body.instant,
+                    type:body.type,
+                    count:0,
+                    createdby:body.email,
+                }
+            })
+            if (body.options.length > 0) {
+                const pollOptionsData = body.options.map((option: { name: string; reason: boolean }) => ({
+                  name: option.name,
+                  reason: option.reason,
+                  count: 0,
+                  pollid: newPoll.id,
+                }));
+          
+                await prisma.pollOptions.createMany({
+                  data: pollOptionsData,
+                });
+              }
+            return res.status(200).json({message:"Poll Created successfully"})
+        }
     }
-    catch{
-
+    catch(err){
+        console.log(err);
+        return res.status(501).json({message:err})
     }
 }
 
-
-
-
-export const adminOngoingPolls =async(req:any,res:any)=>{
-
+const ongoingPolls =async(req:any,res:any)=>{
     try{
         const polls=await prisma.poll.findMany({
             where:{
@@ -34,8 +89,8 @@ export const adminOngoingPolls =async(req:any,res:any)=>{
                                 stdate:new Date().toISOString().substring(0,10),
                                 sttime:{lte:new Date().toTimeString().split(" ")[0]}
                             }
-                        ]
-                     }
+                        ]   
+                    }
                 ]
             },
             include:{
@@ -43,13 +98,8 @@ export const adminOngoingPolls =async(req:any,res:any)=>{
                 options:true
     
             },
-           
-    
         })
-
         return res.status(200).json({polls})
-
-
     }
     catch(err){
         return res.status(500).json({msg:"error"})
@@ -75,6 +125,11 @@ export const adminCompletedPolls=async(req:any,res:any)=>{
     catch(err){
         return res.status(500).json({msg:"error"})
     }
-
-
 }
+
+export {pollCreate,ongoingPolls}
+
+
+
+
+

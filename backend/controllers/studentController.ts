@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import {  studentSignin, studentSignUp } from "../zod";
+import { studentpoll, studentSignin, studentSignUp } from "../zod";
 import { PrismaClient } from "@prisma/client";
+import { builtinModules } from "module";
+import { error } from "console";
 
 const prisma = new PrismaClient();
 
@@ -70,9 +72,41 @@ const studentRegister = async(req:any,res:any)=>{
     }
 }
 
+const studentPoll = async(req:any,res:any)=>{
+    try{
+        const body = req.body;
+        const parsing = studentpoll.safeParse(body);
+        if(!parsing.success){
+            return res.json({success:false,message:"Type mismatch"});
+        }
+        if(body.reason == null){
+            const polled = await prisma.polled.create({
+                data:{
+                    pollid:body.pollid,
+                    studrollno:body.studrollno,
+                    option:body.option
+                }
+            })
+            return res.status(200).json({message:"Polled"})
+        }else{
+            const polled = await prisma.polled.create({
+                data:{
+                    pollid:body.pollid,
+                    studrollno:body.studrollno,
+                    reason:body.reason,
+                    option:body.option
+                }
+            })
+            return res.status(200).json({message:"Polled"})
+        }
+    }catch(err){
+        console.log(err);
+        return res.status(501).json({message:err})
+    }
+}
+
 const studCompletedPolls =async(req:any,res:any)=>{
     try{
-        
         const data=await prisma.polled.findMany({
             where:{
                 studrollno:req.headers.rollno
@@ -81,30 +115,11 @@ const studCompletedPolls =async(req:any,res:any)=>{
                 poll:true
             }
         }) 
-
-
-
-        
-
-
     }
-    catch{
-
-
-
+    catch(er){
+        console.log(er);
+        res.status(501).json({message:er})
     }
-
-    
-
-
-
-
-
-
 }
 
-
-
-
-
-export {studentRegister,studentLogin}
+export {studentRegister,studentLogin,studentPoll,studCompletedPolls}
