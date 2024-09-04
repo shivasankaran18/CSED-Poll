@@ -1,4 +1,4 @@
-import zod, { string } from "zod"
+import zod, { boolean, string } from "zod"
 
 export const studentSignin = zod.object({
     rollno : zod.string(),
@@ -31,10 +31,8 @@ export const adminSignIn = zod.object({
 export const createPoll = zod.object({
     title:zod.string(),
     description:zod.string(),
-    options: zod.array(zod.object({
-        name : zod.string(),
-        reason: zod.boolean()
-    })),
+    options: zod.array(string()),
+    reasonsNeeded : zod.array(boolean()),
     instant: zod.boolean(),
     stdate : zod.string().optional(),
     sttime : zod.string().optional(),

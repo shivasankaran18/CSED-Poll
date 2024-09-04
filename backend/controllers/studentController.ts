@@ -2,13 +2,11 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { studentpoll, studentSignin, studentSignUp } from "../zod";
 import { PrismaClient } from "@prisma/client";
-import { builtinModules } from "module";
-import { error } from "console";
 
 const prisma = new PrismaClient();
 
 const createToken = (id:any)=>{
-    return jwt.sign({id},"student");
+    return jwt.sign({id},process.env.JWT_SECRET || "");
 }
 
 const studentLogin = async(req: any,res: any)=>{
@@ -33,11 +31,11 @@ const studentLogin = async(req: any,res: any)=>{
             return res.json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.rollno);
-        return res.status(200).json({token:token});
+        return res.json({success:true,token:token});
     }
     catch(err){
         console.log(err);
-        return res.status(500).json({success:false,message:err})
+        return res.json({success:false,message:err})
     }
 }
 
@@ -83,7 +81,7 @@ const studentPoll = async(req:any,res:any)=>{
             const polled = await prisma.polled.create({
                 data:{
                     pollid:body.pollid,
-                    studrollno:body.studrollno,
+                    studrollno:req.header.id,
                     option:body.option
                 }
             })
@@ -92,7 +90,7 @@ const studentPoll = async(req:any,res:any)=>{
             const polled = await prisma.polled.create({
                 data:{
                     pollid:body.pollid,
-                    studrollno:body.studrollno,
+                    studrollno:req.header.id,
                     reason:body.reason,
                     option:body.option
                 }
@@ -105,21 +103,48 @@ const studentPoll = async(req:any,res:any)=>{
     }
 }
 
-const studCompletedPolls =async(req:any,res:any)=>{
-    try{
-        const data=await prisma.polled.findMany({
-            where:{
-                studrollno:req.headers.rollno
-            },
-            select:{
-                poll:true
-            }
-        }) 
-    }
-    catch(er){
-        console.log(er);
-        res.status(501).json({message:er})
-    }
-}
+// export const getNotPolled = async(req:any,res:any)=>{
+//     try{
+//         const polls=await prisma.poll.findMany({
+//             where:{
+//                 completed:false,
+//                 OR:[
+//                     {
+//                         Instant:true
+//                     },
+//                     {
+//                         Instant:false,
+//                         OR:[
+//                             {
+//                                 stdate:{lt:new Date().toISOString().substring(0,10)},
+//                             },
+//                             {
+//                                 stdate:new Date().toISOString().substring(0,10),
+//                                 sttime:{lte:new Date().toTimeString().split(" ")[0]}
+//                             }
+//                         ]   
+//                     }
+//                 ]
+//             },
+//             select:{
+//                 id:true
+//             }
+//         })
+//         const pollIds = polls.map(poll => poll.id);
+//         const polledPolls = await prisma.polled.findMany({
+//             where: {
+//                 studrollno: req.headers.id,
+//                 pollid: { in: pollIds }
+//             }
+//         })
+//         const polledPollIds = polledPolls.map((polled: { pollid: any; }) => polled.pollid);
+//         const notPolled = pollIds.filter(pollId => !po)
+//         return  res.status(200).json({polls:polls})
+//     }catch(err){
+//         console.log(err);
+//         return res.status(501).json({message:err})
+//     }
+// }
 
-export {studentRegister,studentLogin,studentPoll,studCompletedPolls}
+
+export {studentRegister,studentLogin,studentPoll}
