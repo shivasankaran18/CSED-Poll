@@ -21,13 +21,13 @@ const pollCreate = async(req:any,res:any) =>{
                     sttime:body.sttime,
                     type:body.type,
                     count:0,
-                    createdby:body.email
+                    createdby:body.email,
                 }
             })
             if (body.options.length > 0) {
-                const pollOptionsData = body.options.map((option: { name: string; reason: boolean }) => ({
-                  name: option.name,
-                  reason: option.reason,
+                const pollOptionsData = body.options.map((option: string,index:number) => ({
+                  name: option,
+                  reason: body.reasonsNeeded[index],
                   count: 0,
                   pollid: newPoll.id,
                 }));
@@ -50,13 +50,12 @@ const pollCreate = async(req:any,res:any) =>{
                 }
             })
             if (body.options.length > 0) {
-                const pollOptionsData = body.options.map((option: { name: string; reason: boolean }) => ({
-                  name: option.name,
-                  reason: option.reason,
-                  count: 0,
-                  pollid: newPoll.id,
-                }));
-          
+              const pollOptionsData = body.options.map((option: string,index:number) => ({
+                name: option,
+                reason: body.reasonsNeeded[index],
+                count: 0,
+                pollid: newPoll.id,
+              }));
                 await prisma.pollOptions.createMany({
                   data: pollOptionsData,
                 });
