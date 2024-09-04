@@ -6,7 +6,7 @@ import { adminSignIn, adminSignUp } from "../zod";
 const prisma = new PrismaClient();
 
 const createToken = (id:any)=>{
-    return jwt.sign({id},"student");
+    return jwt.sign({id},process.env.JWT_SECRET || "");
 }
 
 const adminRegister = async(req:any,res:any) =>{
