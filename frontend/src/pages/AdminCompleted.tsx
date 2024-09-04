@@ -102,7 +102,8 @@ export  function AdminCompleted() {
     <div className="w-full  bg-purple-50 min-h-screen absolute left-0 top-0 mt-20">
       <h1 className="text-3xl font-bold text-purple-800 mb-6">Completed Polls</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {completedPolls.map((poll) => (
+        {//@ts-ignore
+        polls.map((poll) => (
           <motion.div
             key={poll.id}
             initial={{ opacity: 0, y: 20 }}

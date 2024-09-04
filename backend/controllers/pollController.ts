@@ -4,7 +4,7 @@ import { createPoll } from "../zod";
 const prisma = new PrismaClient();
 
 
-const pollCreate = async(req:any,res:any) =>{
+export const pollCreate = async(req:any,res:any) =>{
     try{
         const body = req.body;
         const parsing = createPoll.safeParse(body);
@@ -70,7 +70,7 @@ const pollCreate = async(req:any,res:any) =>{
     }
 }
 
-const ongoingPolls =async(req:any,res:any)=>{
+export const adminOngoingPolls =async(req:any,res:any)=>{
     try{
         const polls=await prisma.poll.findMany({
             where:{
@@ -127,7 +127,7 @@ export const adminCompletedPolls=async(req:any,res:any)=>{
     }
 }
 
-export {pollCreate,ongoingPolls}
+
 
 
 
