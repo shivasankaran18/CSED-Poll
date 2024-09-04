@@ -52,8 +52,8 @@ model Poll{
   description String
   options pollOptions[]
   Instant Boolean @default(true)
-  sttime DateTime?
-  stdate DateTime?
+  sttime String?
+  stdate String?
   type String @default("General")
   count Int
   completed Boolean @default(false)
