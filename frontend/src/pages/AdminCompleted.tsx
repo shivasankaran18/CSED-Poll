@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { Navbar } from '@/components/ui/AdminNavbar'
 
 import { AdminCard } from '@/components/ui/Admincard'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { BACKEND_URL } from '../../config'
 
 
 interface PollOption {
@@ -65,6 +68,32 @@ const completedPolls: CompletedPoll[] = [
 ]
 
 export  function AdminCompleted() {
+  const [polls,setPolls]=useState()
+  const [flag,setFlag]=useState(true)
+
+  useEffect(()=>{
+    axios.get(`${BACKEND_URL}/api/admin/completed`,{
+      headers:{
+        Authorization:localStorage.getItem("admintoken")
+      }
+    }).then((data)=>{
+      setPolls(data.data.polls)
+      setFlag(false)
+
+    })
+
+
+
+
+  })
+  if(flag)
+  {
+    return(
+      <>
+        Loading..
+      </>
+    )
+  }
 
 
   return (

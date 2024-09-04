@@ -14,10 +14,9 @@ const createPoll = async(req:any,res:any) =>{
 
 
 
-export const ongoingPolls =async(req:any,res:any)=>{
+export const adminOngoingPolls =async(req:any,res:any)=>{
 
     try{
-
         const polls=await prisma.poll.findMany({
             where:{
                 completed:false,
@@ -35,13 +34,8 @@ export const ongoingPolls =async(req:any,res:any)=>{
                                 stdate:new Date().toISOString().substring(0,10),
                                 sttime:{lte:new Date().toTimeString().split(" ")[0]}
                             }
-
-
                         ]
-                        
-                        
-                    }
-    
+                     }
                 ]
             },
             include:{
@@ -58,11 +52,29 @@ export const ongoingPolls =async(req:any,res:any)=>{
 
     }
     catch(err){
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"error"})
     }
-   
+}
 
-    
+export const adminCompletedPolls=async(req:any,res:any)=>{
+
+    try{
+
+        const polls=await prisma.poll.findMany({
+            where:{
+                completed:true
+            },
+            include:{
+                polled:true,
+                options:true
+            }
+        })
+
+        return res.status(200).json({polls})
+    }
+    catch(err){
+        return res.status(500).json({msg:"error"})
+    }
 
 
 }
