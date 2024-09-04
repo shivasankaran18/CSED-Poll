@@ -37,3 +37,5 @@ export const createPoll = zod.object({
     stdate : zod.date().optional(),
     sttime : zod.string().regex(timeRegex).optional(),
 })
+
+

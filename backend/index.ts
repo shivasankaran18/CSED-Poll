@@ -9,6 +9,13 @@ app.use(express.json())
 app.use(cors())
 const BACKEND_PORT = process.env.PORT
 
+
+app.get("/test",async(req,res)=>{
+
+
+    
+})
+
 app.listen(BACKEND_PORT,()=>{
     console.log("Running")
 })
