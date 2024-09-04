@@ -42,7 +42,7 @@ model pollOptions{
   count Int
   reason Boolean @default(false)
   pollid Int
-  poll Poll @relation(fields: [pollid],references: [id])
+  poll Poll @relation(fields: [pollid],references: [id],onDelete:Cascade)
   polled Polled[]
 }
 
@@ -59,7 +59,7 @@ model Poll{
   completed Boolean @default(false)
   polled  Polled[]
   createdby String
-  admin Admin @relation(fields: [createdby],references: [email])
+  admin Admin @relation(fields: [createdby],references: [email],onDelete: Cascade)
 }
 model Polled{
   id Int  @id @default(autoincrement())
@@ -67,9 +67,9 @@ model Polled{
   studrollno String
   reason String?
   option Int
-  optionClicked pollOptions @relation(fields: [option],references: [id])
-  student Student @relation(fields: [studrollno],references: [rollno])
-  poll Poll @relation(fields: [pollid],references: [id])
+  optionClicked pollOptions @relation(fields: [option],references: [id],onDelete: Cascade)
+  student Student @relation(fields: [studrollno],references: [rollno],onDelete: Cascade)
+  poll Poll @relation(fields: [pollid],references: [id],onDelete: Cascade)
 }
 
 
