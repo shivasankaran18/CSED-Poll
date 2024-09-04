@@ -31,7 +31,7 @@ const studentLogin = async(req: any,res: any)=>{
             return res.json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.rollno);
-        return res.json({success:true,token:token});
+        return res.json({success:true,token:"Bearer "+token});
     }
     catch(err){
         console.log(err);
@@ -62,7 +62,7 @@ const studentRegister = async(req:any,res:any)=>{
             }
         })
         const token = createToken(body.rollno);
-        return res.json({success:true,message:"Student Created Successfully",token:token});
+        return res.json({success:true,message:"Student Created Successfully",token:"Bearer "+token});
     }
     catch(err){
         console.log(err);
@@ -81,7 +81,7 @@ const studentPoll = async(req:any,res:any)=>{
             const polled = await prisma.polled.create({
                 data:{
                     pollid:body.pollid,
-                    studrollno:req.header.id,
+                    studrollno:req.headers.id,
                     option:body.option
                 }
             })
@@ -90,7 +90,7 @@ const studentPoll = async(req:any,res:any)=>{
             const polled = await prisma.polled.create({
                 data:{
                     pollid:body.pollid,
-                    studrollno:req.header.id,
+                    studrollno:req.headers.id,
                     reason:body.reason,
                     option:body.option
                 }
@@ -103,48 +103,47 @@ const studentPoll = async(req:any,res:any)=>{
     }
 }
 
-// export const getNotPolled = async(req:any,res:any)=>{
-//     try{
-//         const polls=await prisma.poll.findMany({
-//             where:{
-//                 completed:false,
-//                 OR:[
-//                     {
-//                         Instant:true
-//                     },
-//                     {
-//                         Instant:false,
-//                         OR:[
-//                             {
-//                                 stdate:{lt:new Date().toISOString().substring(0,10)},
-//                             },
-//                             {
-//                                 stdate:new Date().toISOString().substring(0,10),
-//                                 sttime:{lte:new Date().toTimeString().split(" ")[0]}
-//                             }
-//                         ]   
-//                     }
-//                 ]
-//             },
-//             select:{
-//                 id:true
-//             }
-//         })
-//         const pollIds = polls.map(poll => poll.id);
-//         const polledPolls = await prisma.polled.findMany({
-//             where: {
-//                 studrollno: req.headers.id,
-//                 pollid: { in: pollIds }
-//             }
-//         })
-//         const polledPollIds = polledPolls.map((polled: { pollid: any; }) => polled.pollid);
-//         const notPolled = pollIds.filter(pollId => !po)
-//         return  res.status(200).json({polls:polls})
-//     }catch(err){
-//         console.log(err);
-//         return res.status(501).json({message:err})
-//     }
-// }
+export const getNotPolled = async(req:any,res:any)=>{
+    try{
+        const polls=await prisma.poll.findMany({
+            where:{
+                completed:false,
+                OR:[
+                    {
+                        Instant:true
+                    },
+                    {
+                        Instant:false,
+                        OR:[
+                            {
+                                stdate:{lt:new Date().toISOString().substring(0,10)},
+                            },
+                            {
+                                stdate:new Date().toISOString().substring(0,10),
+                                sttime:{lte:new Date().toTimeString().split(" ")[0]}
+                            }
+                        ]   
+                    }
+                ]
+            }
+        })
+        const pollIds = polls.map(poll => poll.id);
+        const polledPolls = await prisma.polled.findMany({
+            where: {
+                studrollno: req.headers.id,
+                pollid: { in: pollIds }
+            }
+        })
+        console.log(polls)
+        const polledPollIds = polledPolls.map(polled => polled.pollid);
+        const polled = polls.filter(poll => polledPollIds.includes(poll.id));
+        const unpolled = polls.filter(poll => !polledPollIds.includes(poll.id));
+        return  res.status(200).json({polled:polled,unpolled:unpolled})
+    }catch(err){
+        console.log(err);
+        return res.status(501).json({message:err})
+    }
+}
 
 
 export {studentRegister,studentLogin,studentPoll}
