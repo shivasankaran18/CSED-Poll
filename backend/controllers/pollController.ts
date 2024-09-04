@@ -1,8 +1,8 @@
-import { any } from "zod";
-import { createPoll } from "../zod";
 import { PrismaClient } from "@prisma/client";
+import { createPoll } from "../zod";
 
 const prisma = new PrismaClient();
+
 
 const pollCreate = async(req:any,res:any) =>{
     try{
@@ -70,5 +70,45 @@ const pollCreate = async(req:any,res:any) =>{
     }
 }
 
+const ongoingPolls =async(req:any,res:any)=>{
+    try{
+        const polls=await prisma.poll.findMany({
+            where:{
+                completed:false,
+                OR:[
+                    {
+                        Instant:true
+                    },
+                    {
+                        Instant:false,
+                        OR:[
+                            {
+                                stdate:{lt:new Date().toISOString().substring(0,10)},
+                            },
+                            {
+                                stdate:new Date().toISOString().substring(0,10),
+                                sttime:{lte:new Date().toTimeString().split(" ")[0]}
+                            }
+                        ]   
+                    }
+                ]
+            },
+            include:{
+                polled:true,
+                options:true
+    
+            },
+        })
+        return res.status(200).json({polls})
+    }
+    catch(err){
+        return res.status(500).json({msg:err})
+    }
+}
 
-export {pollCreate}
+export {pollCreate,ongoingPolls}
+
+
+
+
+

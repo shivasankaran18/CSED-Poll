@@ -4,13 +4,31 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { GraduationCap, User, Lock } from 'lucide-react'
+import axios from 'axios'
+import { BACKEND_URL } from '../../config.ts'
+import { useNavigate } from 'react-router-dom'
 
 export function StudLogin() {
   const [studRollno, setStudRolno] = useState('');
   const [password, setPassword] = useState('');
+  const navigate =useNavigate()
 
   const handleSubmit = async () => {
-    // Your submit logic
+    
+    const res=await axios.post(`${BACKEND_URL}/api/student/login`,{
+      rollno:studRollno,
+      password
+
+    })
+    if(res.status!=200)
+    {
+      alert("error")
+    }
+    else{
+      localStorage.setItem("studenttoken",res.data.token)
+      navigate("/student/ongoing")
+    }
+    
   };
 
   return (

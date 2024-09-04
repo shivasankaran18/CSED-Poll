@@ -47,3 +47,4 @@ export const studentpoll = zod.object({
     reason:zod.string().optional(),
     option : zod.number().int()
 })
+

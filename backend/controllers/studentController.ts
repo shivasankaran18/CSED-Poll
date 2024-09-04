@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import { studentpoll, studentSignin, studentSignUp } from "../zod";
 import { PrismaClient } from "@prisma/client";
 import { builtinModules } from "module";
+import { error } from "console";
 
 const prisma = new PrismaClient();
 
@@ -32,11 +33,11 @@ const studentLogin = async(req: any,res: any)=>{
             return res.json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.rollno);
-        return res.json({success:true,token:token});
+        return res.status(200).json({token:token});
     }
     catch(err){
         console.log(err);
-        return res.json({success:false,message:err})
+        return res.status(500).json({success:false,message:err})
     }
 }
 
@@ -104,5 +105,21 @@ const studentPoll = async(req:any,res:any)=>{
     }
 }
 
+const studCompletedPolls =async(req:any,res:any)=>{
+    try{
+        const data=await prisma.polled.findMany({
+            where:{
+                studrollno:req.headers.rollno
+            },
+            select:{
+                poll:true
+            }
+        }) 
+    }
+    catch(er){
+        console.log(er);
+        res.status(501).json({message:er})
+    }
+}
 
-export {studentRegister,studentLogin,studentPoll}
+export {studentRegister,studentLogin,studentPoll,studCompletedPolls}
