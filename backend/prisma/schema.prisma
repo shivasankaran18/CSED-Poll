@@ -16,15 +16,15 @@ datasource db {
 
 
 model Student{
-  rollno String @id 
+  rollno String @id
+  email String @unique @default("yashwanthviratkohli@gmail.com")
   name String
   password String
   dept String
   section String
   year Int
-  contactno String
+  contactno String?
   polled Polled[]
-  notPolled notPolledReason[]
 }
 
 model Admin{
@@ -39,40 +39,35 @@ model Admin{
 model pollOptions{
   id Int @id @default(autoincrement())
   name String
+  count Int
   reason Boolean @default(false)
   pollid Int
   poll Poll @relation(fields: [pollid],references: [id])
+  polled Polled[]
 }
 
-model notPolledReason{
-  id Int @id @default(autoincrement())
-  pollid Int
-  poll Poll @relation(fields: [pollid],references: [id])
-  reason String
-  studentId String
-  student Student @relation(fields: [studentId],references: [rollno])
-}
 model Poll{
   id Int @id @default(autoincrement())
   title String
   description String
   options pollOptions[]
-  automatic Boolean @default(false)
-  sttime String
-  endtime String
-  stdate String
-  enddate String
+  Instant Boolean @default(true)
+  sttime DateTime?
+  stdate DateTime?
   type String @default("General")
   count Int
+  completed Boolean @default(false)
   polled  Polled[]
   createdby String
-  notPolled notPolledReason[]
   admin Admin @relation(fields: [createdby],references: [email])
 }
 model Polled{
   id Int  @id @default(autoincrement())
   pollid Int 
   studrollno String
+  reason String?
+  option Int
+  optionClicked pollOptions @relation(fields: [option],references: [id])
   student Student @relation(fields: [studrollno],references: [rollno])
   poll Poll @relation(fields: [pollid],references: [id])
 }

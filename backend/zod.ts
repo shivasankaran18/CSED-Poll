@@ -27,3 +27,9 @@ export const adminSignIn = zod.object({
     email : zod.string().email(),
     password : zod.string()
 })
+
+export const createPoll = zod.object({
+    title:zod.string(),
+    description:zod.string(),
+    
+})
