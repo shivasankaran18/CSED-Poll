@@ -27,13 +27,23 @@ export const adminSignIn = zod.object({
     email : zod.string().email(),
     password : zod.string()
 })
-const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/;
 
 export const createPoll = zod.object({
     title:zod.string(),
     description:zod.string(),
-    options: zod.array(zod.string()),
+    options: zod.array(zod.object({
+        name : zod.string(),
+        reason: zod.boolean()
+    })),
     instant: zod.boolean(),
-    stdate : zod.date().optional(),
-    sttime : zod.string().regex(timeRegex).optional(),
+    stdate : zod.string().optional(),
+    sttime : zod.string().optional(),
+    type : zod.string(),
+})
+
+export const studentpoll = zod.object({
+    pollid:zod.number().int(),
+    studrollno : zod.string(),
+    reason:zod.string().optional(),
+    option : zod.number().int()
 })

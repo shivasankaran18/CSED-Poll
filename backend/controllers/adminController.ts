@@ -24,7 +24,7 @@ const adminRegister = async(req:any,res:any) =>{
             data:{
                 email:body.email,
                 name:body.name,
-                password:body.password,
+                password:hashedPass,
                 dept:body.dept,
                 section:body.section
             }
