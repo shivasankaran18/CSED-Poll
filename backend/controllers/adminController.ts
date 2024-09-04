@@ -30,7 +30,7 @@ const adminRegister = async(req:any,res:any) =>{
             }
         })
         const token = createToken(body.email);
-        return res.json({success:true,message:"Admin Created",token:token})
+        return res.json({success:true,message:"Admin Created",token:"Bearer "+token})
     }
     catch(err){
         console.log(err);
@@ -60,7 +60,7 @@ const adminLogin = async(req:any,res:any) =>{
             return res.json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.email);
-        return res.json({success:true,token:token});
+        return res.json({success:true,token:"Bearer "+token});
     }
     catch(err){
         console.log(err);
