@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Student{
+  rollno String @id 
+  name String
+  password String
+  dept String
+  section String
+  year Int
+  contactno String
+  polled Polled[]
+
+
+
+
+
+}
+
+model Admin{
+  email String @id
+  name String
+  password String
+  dept String
+  section String?
+  polls Poll[]
+
+
+  
+
+
+
+}
+
+model Poll{
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  options String[]
+  sttime String
+  endtime String
+  stdate String
+  enddate String
+  type String @default("General")
+  count Int
+  polled  Polled[]
+  createdby String
+  admin Admin @relation(fields: [createdby],references: [email])
+
+
+
+}
+model Polled{
+  id Int  @id @default(autoincrement())
+  pollid Int 
+  studrollno String
+  student Student @relation(fields: [studrollno],references: [rollno])
+  poll Poll @relation(fields: [pollid],references: [id])
+
+
+
+
+}
+
+
+
+
+
