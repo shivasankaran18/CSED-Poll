@@ -23,8 +23,8 @@ export function AdminOngoing() {
     options: ['', ''],
     reasonsNeeded: [false, false],
     type: 'instant',
-    startDate: '',
-    startTime: ''
+    stdate: '',
+    sttime: ''
   })
 
   useEffect(() => {
@@ -38,14 +38,15 @@ export function AdminOngoing() {
     })
   }, [])
 
-  const handleInputChange = (e:any, index = null) => {
-    const { name, value } = e.target
+  const handleInputChange = (e:{name:string,value:string}, index = null) => {
+    const { name, value } = e
     if (index !== null) {
       //@ts-ignore
       const newArray = [...pollForm[name]]
       newArray[index] = value
       setPollForm(prev => ({ ...prev, [name]: newArray }))
     } else {
+      console.log(pollForm)
       setPollForm(prev => ({ ...prev, [name]: value }))
     }
   }
@@ -72,20 +73,26 @@ export function AdminOngoing() {
     }))
   }
 
-  const handleSubmit = (e:any) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
+  
   
     console.log(pollForm)
+    const res=await axios.post(`${BACKEND_URL}/api/poll/create`,pollForm,{
+      headers:{
+        Authorization:localStorage.getItem("admintoken")
+      }
+    })
+    console.log(res.data)
     setIsDialogOpen(false)
-    // Reset form after submission
+  
     setPollForm({
       title: '',
       description: '',
       options: ['', ''],
       reasonsNeeded: [false, false],
       type: 'instant',
-      startDate: '',
-      startTime: ''
+      stdate: '',
+      sttime: ''
     })
   }
 
@@ -115,8 +122,8 @@ export function AdminOngoing() {
                   <Input
                     id="title"
                     name="title"
-                    value={pollForm.title}
-                    onChange={handleInputChange}
+                    
+                    onChange={(e)=>handleInputChange({name:'title',value:e.target.value},)}
                     required
                   />
                 </div>
@@ -125,8 +132,8 @@ export function AdminOngoing() {
                   <Textarea
                     id="description"
                     name="description"
-                    value={pollForm.description}
-                    onChange={handleInputChange}
+                
+                    onChange={(e)=>handleInputChange({name:"description",value:e.target.value})}
                     required
                   />
                 </div>
@@ -136,9 +143,9 @@ export function AdminOngoing() {
                     <div key={index} className="flex items-center space-x-2 mb-2">
                       <Input
                         name="options"
-                        value={option}
+                   
                         //@ts-ignore
-                        onChange={(e) => handleInputChange(e, index)}
+                        onChange={(e) => handleInputChange({name:"options",value:e.target.value}, index)}
                         required
                         placeholder={`Option ${index + 1}`}
                         className="flex-grow"
@@ -203,8 +210,8 @@ export function AdminOngoing() {
                           type="date"
                           id="startDate"
                           name="startDate"
-                          value={pollForm.startDate}
-                          onChange={handleInputChange}
+                   
+                          onChange={(e)=>{handleInputChange({name:"description",value:e.target.value})}}
                           required
                         />
                       </div>
@@ -213,9 +220,8 @@ export function AdminOngoing() {
                         <Input
                           type="time"
                           id="startTime"
-                          name="startTime"
-                          value={pollForm.startTime}
-                          onChange={handleInputChange}
+                 
+                          onChange={(e)=>handleInputChange({name:"description",value:e.target.value})}
                           required
                         />
                       </div>

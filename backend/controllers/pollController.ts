@@ -11,12 +11,12 @@ export const pollCreate = async(req:any,res:any) =>{
         if(!parsing.success){
             return res.json({success:false,message:"Type mismatch"})
         }
-        if(body.instant == false){
+        if(body.type ==='scheduled'){
             const newPoll = await prisma.poll.create({
                 data:{
                     title:body.title,
                     description : body.description,
-                    Instant: body.instant,
+                    Instant: false,
                     stdate:body.stdate,
                     sttime:body.sttime,
                     type:body.type,
@@ -85,7 +85,7 @@ export const adminOngoingPolls =async(req:any,res:any)=>{
                                 stdate:{lt:new Date().toISOString().substring(0,10)},
                             },
                             {
-                                stdate:new Date().toISOString().substring(0,10),
+                                stdate:new Date().toLocaleDateString(),
                                 sttime:{lte:new Date().toTimeString().split(" ")[0]}
                             }
                         ]   
