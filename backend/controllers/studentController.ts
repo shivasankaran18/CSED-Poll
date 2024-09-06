@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { studentchangepassword, studentchangepasswordlogin, studentchangepasswordotp, studentpoll, studentSignin, studentSignUp } from "../zod";
 import { PrismaClient } from "@prisma/client";
 import { builtinModules } from "module";
-import { generateOTP, changeMailPortion, transporter, date } from "../lib/util";
+import { generateOTP, changeMailPortion, transporter,  } from "../lib/util";
 
 const prisma = new PrismaClient();
 
@@ -19,9 +19,31 @@ const format = (date: string) => {
     return formattedDate
   }
 
+
+  export const getCurrentISTTime = () => {
+    const now = new Date();
+  
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  
+
+    const [{ value: day }, , { value: month }, , { value: year }, , { value: hour }, , { value: minute }, , { value: second }] = formatter.formatToParts(now);
+ 
+    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+  };
+
 const createToken = (id:any)=>{
     return jwt.sign({id},process.env.JWT_SECRET || "");
 }
+
+
 
 const studentLogin = async(req: any,res: any)=>{
     try{
@@ -164,11 +186,11 @@ export const getPolls = async(req:any,res:any)=>{
                 OR:[
                    
                     {
-                         stdate:{lt:format(date.toISOString().substring(0,10))},
+                         stdate:{lt:format(getCurrentISTTime().toISOString().substring(0,10))},
                      },
                      {
-                         stdate:format(date.toISOString().substring(0,10)),
-                         sttime:{lte:date.toTimeString().substring(0,5)}
+                         stdate:format(getCurrentISTTime().toISOString().substring(0,10)),
+                         sttime:{lte:getCurrentISTTime().toTimeString().substring(0,5)}
                      }
                      ] 
 
@@ -224,7 +246,7 @@ export const studentChangePasswordLogin=async(req:any,res:any)=>{
             data:{
                 email,
                 otp,
-                expires:new Date(date.getTime() + 10*60*1000)
+                expires:new Date(getCurrentISTTime().getTime() + 10*60*1000)
             }
         })
         let mail=changeMailPortion(email,otp)

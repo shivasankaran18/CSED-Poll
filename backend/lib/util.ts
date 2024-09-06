@@ -257,6 +257,6 @@ export function pollMailPortion(email:string, title:string,name:string){
 
 // export const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
 
-const now = new Date();
-const utcOffset = now.getTimezoneOffset() * 60000; // Get UTC offset in milliseconds
-export const date = new Date(now.getTime() + utcOffset + (5.5 * 3600000)); 
+// const now = new Date();
+// const utcOffset = now.getTimezoneOffset() * 60000; // Get UTC offset in milliseconds
+// export const date = new Date(now.getTime() + utcOffset + (5.5 * 3600000)); 

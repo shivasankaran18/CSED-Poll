@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createPoll } from "../zod";
 import { equal } from "assert";
-import { date, pollMailPortion, transporter } from "../lib/util";
+import {  pollMailPortion, transporter } from "../lib/util";
 
 const prisma = new PrismaClient();
 const format = (date: string) => {
@@ -15,6 +15,27 @@ const format = (date: string) => {
     console.log(formattedDate);
     return formattedDate
   }
+
+
+  export const getCurrentISTTime = () => {
+    const now = new Date();
+  
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  
+    
+    const [{ value: day }, , { value: month }, , { value: year }, , { value: hour }, , { value: minute }, , { value: second }] = formatter.formatToParts(now);
+  
+
+    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+  };
 
 
 export const pollCreate = async(req:any,res:any) =>{
@@ -64,8 +85,8 @@ export const pollCreate = async(req:any,res:any) =>{
                     type:body.polltype,
                     count:0,
                     createdby:req.headers.id,
-                    stdate:format(date.toISOString().substring(0,10)),
-                    sttime:date.toTimeString().substring(0,5),
+                    stdate:format(getCurrentISTTime().toISOString().substring(0,10)),
+                    sttime:getCurrentISTTime().toTimeString().substring(0,5),
                     autoDelete:body.autoDelete
                 }
             })
@@ -127,11 +148,11 @@ export const adminOngoingPolls =async(req:any,res:any)=>{
                 OR:[
                    
                    {
-                        stdate:{lt:format(date.toISOString().substring(0,10))},
+                        stdate:{lt:format(getCurrentISTTime().toISOString().substring(0,10))},
                     },
                     {
-                        stdate:format(date.toISOString().substring(0,10)),
-                        sttime:{lte:date.toTimeString().substring(0,5)}
+                        stdate:format(getCurrentISTTime().toISOString().substring(0,10)),
+                        sttime:{lte:getCurrentISTTime().toTimeString().substring(0,5)}
                     }
                     ]   
                     

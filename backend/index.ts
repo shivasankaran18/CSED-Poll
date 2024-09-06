@@ -31,7 +31,7 @@ app.use("/api/poll",pollRouter)
 
 app.delete("/delete",async(req,res)=>{
     try{
-        const deleted = await prisma.oTPRequest.deleteMany({
+        const deleted = await prisma.poll.deleteMany({
           
         })
         return res.json({message:"Deleted"})
