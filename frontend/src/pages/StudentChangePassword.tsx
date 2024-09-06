@@ -10,7 +10,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 export function StudentChangePassword(){
   const [pass1, setPass1] = useState("")
   const [pass2, setPass2] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading,] = useState(false)
   const [search,]=useSearchParams()
   const navigate=useNavigate()
    

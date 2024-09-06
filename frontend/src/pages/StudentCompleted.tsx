@@ -7,21 +7,7 @@ import axios from 'axios'
 import { BACKEND_URL } from '../../config'
 
 
-interface PollOption {
-  id: string
-  text: string
-  votes: number
-  isSelected: boolean
-}
 
-interface CompletedPoll {
-  id: string
-  title: string
-  description: string
-  completedDate: string
-  options: PollOption[]
-  totalVotes: number
-}
 
 export  function StudentCompleted() {
   const [completedPolls,setCompletedPolls]=useState<[]>()

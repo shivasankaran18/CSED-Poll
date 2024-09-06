@@ -12,6 +12,8 @@ import { BACKEND_URL } from '../../config'
 export  function AdminCompleted() {
   const [polls,setPolls]=useState()
   const [flag,setFlag]=useState(true)
+  const [temp,setTemp]=useState<boolean>(true)
+
 
   useEffect(()=>{
     axios.get(`${BACKEND_URL}/api/admin/completed`,{
@@ -27,7 +29,7 @@ export  function AdminCompleted() {
 
 
 
-  },[])
+  },[temp])
   if(flag)
   {
     return(
@@ -52,7 +54,7 @@ export  function AdminCompleted() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <AdminCard poll={poll} />
+            <AdminCard poll={poll} setTemp={setTemp} />
            
           </motion.div>
         ))}

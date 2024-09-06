@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Check, ChevronRight, Calendar, Clock, Trash2 } from "lucide-react"
+import {  ChevronRight, Calendar, Clock, Trash2 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
@@ -16,12 +16,12 @@ import {
 import axios from "axios"
 import { BACKEND_URL } from "../../../config"
 
-export function AdminCard({ poll, }: { poll: any; }) {
+export function AdminCard({ poll, setTemp}: { poll: any;setTemp:React.Dispatch<React.SetStateAction<boolean>> }) {
   const navigate = useNavigate()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   const handleDelete = async() => {
-    const res=await axios.post(`${BACKEND_URL}/api/poll/delete`,{
+    await axios.post(`${BACKEND_URL}/api/poll/delete`,{
       pollid:poll.id
     },{
       headers:{
@@ -29,6 +29,7 @@ export function AdminCard({ poll, }: { poll: any; }) {
       }
     })
     setIsDeleteDialogOpen(false)
+    setTemp(x=>!x)
   }
 
   return (

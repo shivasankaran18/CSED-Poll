@@ -29,6 +29,8 @@ export function AdminOngoing() {
     sttime: '',
     autoDelete: true
   })
+  const [temp,setTemp]=useState<boolean>(true)
+
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/admin/ongoing`, {
@@ -39,7 +41,7 @@ export function AdminOngoing() {
       setPolls(data.data.polls)
       setFlag(false)
     })
-  }, [])
+  }, [temp])
 
   const format = (date: string) => {
     const dateObj = new Date(date);
@@ -109,6 +111,7 @@ export function AdminOngoing() {
       sttime: '',
       autoDelete: true
     })
+    setTemp(!temp)
   }
 
   if (flag) {
@@ -175,7 +178,7 @@ export function AdminOngoing() {
                 </div>
                 <div className="space-y-2">
                   <Label>Options</Label>
-                  {pollForm.options.map((option, index) => (
+                  {pollForm.options.map((_, index) => (
                     <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-2">
                       <Input
                         name="options"
@@ -277,7 +280,7 @@ export function AdminOngoing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <AdminCard poll={poll} />
+              <AdminCard poll={poll} setTemp={setTemp}/>
             </motion.div>
           ))}
         </div>
