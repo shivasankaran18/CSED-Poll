@@ -44,6 +44,10 @@ app.delete("/delete",async(req,res)=>{
 })
 
 
+app.get("/test",(req,res)=>{
+    return res.json({msg:"running"})
+})
+
 
 
 
