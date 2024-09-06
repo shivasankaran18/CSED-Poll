@@ -83,7 +83,7 @@ export function StudentChangePassword(){
           </CardContent>
           <CardFooter>
             <Button onClick={handleSubmit} variant="student"className="w-full text-white" type="submit" disabled={isLoading}>
-              {isLoading ? "Sending..." : "Send OTP"}
+              {isLoading ? "Changing..." : "Change Password"}
             </Button>
           </CardFooter>
         </div>

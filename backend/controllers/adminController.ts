@@ -43,7 +43,7 @@ const adminLogin = async(req:any,res:any) =>{
         const body = req.body;
         const parsing = adminSignIn.safeParse(body);
         if(!parsing.success){
-            return res.json({success:false,message:"Type mismatch"})
+            return res.status(500).json({success:false,message:"Type mismatch"})
         }
         const admin = await prisma.admin.findUnique({
             where:{
@@ -53,18 +53,18 @@ const adminLogin = async(req:any,res:any) =>{
             }
         })
         if(!admin){
-            return res.json({success:false,message:"Admin not found"})
+            return res.status(500).json({success:false,message:"Admin not found"})
         }
         const verifyPass = await bcrypt.compare(body.password,admin.password);
         if(!verifyPass){
-            return res.json({success:false,message:"Invalid Password"})
+            return res.status(500).json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.email);
-        return res.json({success:true,token:"Bearer "+token});
+        return res.status(200).json({success:true,token:"Bearer "+token});
     }
     catch(err){
         console.log(err);
-        return res.json({success:false,message:err})
+        return res.status(500).json({success:false,message:err})
     }
 }
 

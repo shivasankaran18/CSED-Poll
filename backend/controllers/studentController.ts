@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { studentchangepassword, studentchangepasswordlogin, studentchangepasswordotp, studentpoll, studentSignin, studentSignUp } from "../zod";
 import { PrismaClient } from "@prisma/client";
 import { builtinModules } from "module";
-import { generateOTP, changeMailPortion, transporter } from "../lib/util";
+import { generateOTP, changeMailPortion, transporter, date } from "../lib/util";
 
 const prisma = new PrismaClient();
 
@@ -28,7 +28,7 @@ const studentLogin = async(req: any,res: any)=>{
         const body = req.body;
         const parsing = studentSignin.safeParse(body);
         if(!parsing.success){
-            return res.json({success:false,message:"Type mismatch"})
+            return res.status(500).json({success:false,message:"Type mismatch"})
         }
         const student = await prisma.student.findUnique({
             where:{
@@ -38,18 +38,18 @@ const studentLogin = async(req: any,res: any)=>{
             }
         })
         if(!student){
-            return res.json({success:false,message:"Student not found"})
+            return res.status(500).json({success:false,message:"Student not found"})
         }
         const verifyPass = await bcrypt.compare(body.password,student.password);
         if(!verifyPass){
-            return res.json({success:false,message:"Invalid Password"})
+            return res.status(500).json({success:false,message:"Invalid Password"})
         }
         const token = createToken(body.rollno);
-        return res.json({success:true,token:"Bearer "+token});
+        return res.status(200).json({success:true,token:"Bearer "+token});
     }
     catch(err){
         console.log(err);
-        return res.json({success:false,message:err})
+        return res.status(500).json({success:false,message:err})
     }
 }
 
@@ -90,7 +90,7 @@ const studentPoll = async(req:any,res:any)=>{
         const body = req.body;
         const parsing = studentpoll.safeParse(body);
         if(!parsing.success){
-            return res.json({success:false,message:"Type mismatch"});
+            return res.status(500).json({success:false,message:"Type mismatch"});
         }
         if(body.reason == null){
             const polled = await prisma.polled.create({
@@ -152,7 +152,7 @@ const studentPoll = async(req:any,res:any)=>{
         return res.status(200).json({message:"Polled"})
     }catch(err){
         console.log(err);
-        return res.status(501).json({message:err})
+        return res.status(500).json({message:err})
     }
 }
 
@@ -164,11 +164,11 @@ export const getPolls = async(req:any,res:any)=>{
                 OR:[
                    
                     {
-                         stdate:{lt:format(new Date().toISOString().substring(0,10))},
+                         stdate:{lt:format(date.toISOString().substring(0,10))},
                      },
                      {
-                         stdate:format(new Date().toISOString().substring(0,10)),
-                         sttime:{lte:new Date().toTimeString().substring(0,5)}
+                         stdate:format(date.toISOString().substring(0,10)),
+                         sttime:{lte:date.toTimeString().substring(0,5)}
                      }
                      ] 
 
@@ -195,7 +195,7 @@ export const getPolls = async(req:any,res:any)=>{
         return  res.status(200).json({polled:polled,unpolled:unpolled})
     }catch(err){
         console.log(err);
-        return res.status(501).json({message:err})
+        return res.status(500).json({message:err})
     }
 }
 
@@ -224,7 +224,7 @@ export const studentChangePasswordLogin=async(req:any,res:any)=>{
             data:{
                 email,
                 otp,
-                expires:new Date(Date.now() + 10*60*1000)
+                expires:new Date(date.getTime() + 10*60*1000)
             }
         })
         let mail=changeMailPortion(email,otp)

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createPoll } from "../zod";
 import { equal } from "assert";
-import { pollMailPortion, transporter } from "../lib/util";
+import { date, pollMailPortion, transporter } from "../lib/util";
 
 const prisma = new PrismaClient();
 const format = (date: string) => {
@@ -22,7 +22,7 @@ export const pollCreate = async(req:any,res:any) =>{
         const body = req.body;
         const parsing = createPoll.safeParse(body);
         if(!parsing.success){
-            return res.json({success:false,message:"Type mismatch"})
+            return res.status(500).json({success:false,message:"Type mismatch"})
         }
         if(body.type ==='scheduled'){
             const newPoll = await prisma.poll.create({
@@ -64,8 +64,8 @@ export const pollCreate = async(req:any,res:any) =>{
                     type:body.polltype,
                     count:0,
                     createdby:req.headers.id,
-                    stdate:format(new Date().toISOString().substring(0,10)),
-                    sttime:new Date().toTimeString().substring(0,5),
+                    stdate:format(date.toISOString().substring(0,10)),
+                    sttime:date.toTimeString().substring(0,5),
                     autoDelete:body.autoDelete
                 }
             })
@@ -89,7 +89,7 @@ export const pollCreate = async(req:any,res:any) =>{
     }
     catch(err){
         console.log(err);
-        return res.status(501).json({message:err})
+        return res.status(500).json({message:err})
     }
 }
 
@@ -127,11 +127,11 @@ export const adminOngoingPolls =async(req:any,res:any)=>{
                 OR:[
                    
                    {
-                        stdate:{lt:format(new Date().toISOString().substring(0,10))},
+                        stdate:{lt:format(date.toISOString().substring(0,10))},
                     },
                     {
-                        stdate:format(new Date().toISOString().substring(0,10)),
-                        sttime:{lte:new Date().toTimeString().substring(0,5)}
+                        stdate:format(date.toISOString().substring(0,10)),
+                        sttime:{lte:date.toTimeString().substring(0,5)}
                     }
                     ]   
                     

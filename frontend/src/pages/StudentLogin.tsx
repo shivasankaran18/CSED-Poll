@@ -12,22 +12,27 @@ export function StudLogin() {
   const [studRollno, setStudRolno] = useState('');
   const [password, setPassword] = useState('');
   const navigate =useNavigate()
+  const [flag,setFlag]=useState<boolean>(false)
 
   const handleSubmit = async () => {
-    
-    const res=await axios.post(`${BACKEND_URL}/api/student/login`,{
-      rollno:studRollno,
-      password
+    try{
 
-    })
-    if(res.status!=200)
-    {
-      alert("error")
-    }
-    else{
+      setFlag(true)
+      const res=await axios.post(`${BACKEND_URL}/api/student/login`,{
+        rollno:studRollno,
+        password
+  
+      })
       localStorage.setItem("studenttoken",res.data.token)
       navigate("/student/ongoing")
+
     }
+    catch{
+      alert("error")
+      setFlag(false)
+    }
+   
+
     
   };
 
@@ -82,8 +87,9 @@ export function StudLogin() {
             variant={"student"}
             className="w-full  text-lg text-white sm:text-base"
             onClick={handleSubmit}
+            disabled={flag}
           >
-            Log In
+            {flag?"Logging..":"Log In"}
           </Button>
         </div>
 

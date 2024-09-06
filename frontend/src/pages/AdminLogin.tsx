@@ -13,24 +13,27 @@ export function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate=useNavigate();
+  const [flag,setFlag]=useState<boolean>(false)
 
   const handleSubmit = async () => {
-
-    const res=await axios.post(`${BACKEND_URL}/api/admin/login`,{
-      email,
-      password
-
-    })
-    if(res.status!=200)
-    {
-      alert("error")
-    }
-    else{
+    try{
+      setFlag(true)
+      const res=await axios.post(`${BACKEND_URL}/api/admin/login`,{
+        email,
+        password
+  
+      })
       console.log(res.data)
     localStorage.setItem("admintoken",res.data.token)
     navigate("/admin/ongoing")
-    
-  }
+
+    }
+    catch(err){
+
+      alert("error")
+      setFlag(true)
+    }
+   
     
     
   }
@@ -88,7 +91,7 @@ export function AdminLogin() {
               className="w-full text-lg sm:text-base"
               onClick={handleSubmit}
             >
-              Log In
+              {flag?"Logging..":"Log In"}
             </Button>
           </div>
 

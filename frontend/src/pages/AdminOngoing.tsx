@@ -30,6 +30,7 @@ export function AdminOngoing() {
     autoDelete: true
   })
   const [temp,setTemp]=useState<boolean>(true)
+  const [btnflag,setBtnFlag]=useState<boolean>(false)
 
 
   useEffect(() => {
@@ -92,6 +93,7 @@ export function AdminOngoing() {
 
   const handleSubmit = async () => {
     console.log(pollForm)
+    setBtnFlag(true)
     const res = await axios.post(`${BACKEND_URL}/api/poll/create`, pollForm, {
       headers: {
         Authorization: localStorage.getItem("admintoken")
@@ -99,7 +101,6 @@ export function AdminOngoing() {
     })
     console.log(res.data)
     setIsDialogOpen(false)
-
     setPollForm({
       title: '',
       description: '',
@@ -112,6 +113,7 @@ export function AdminOngoing() {
       autoDelete: true
     })
     setTemp(!temp)
+    setBtnFlag(false)
   }
 
   if (flag) {
@@ -264,8 +266,8 @@ export function AdminOngoing() {
                     </div>
                   </div>
                 )}
-                <Button type="submit" onClick={handleSubmit} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Create Poll
+                <Button type="submit" disabled={btnflag}onClick={handleSubmit} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  {btnflag?"Creating..":"Create Poll"}
                 </Button>
               </div>
             </DialogContent>

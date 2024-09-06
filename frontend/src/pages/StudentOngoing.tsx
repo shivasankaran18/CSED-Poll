@@ -24,6 +24,7 @@ export function StudentOngoing() {
   const [loading,setLoading]=useState<boolean>(true)
 
 
+
   useEffect(() => {
 
     axios.get(`${BACKEND_URL}/api/student/polls`,{
@@ -100,37 +101,48 @@ export function StudentOngoing() {
   }
 
   const handleSubmit=async (pollid:number)=>{
-    console.log(responses[pollid])
-    if(reasons[pollid])
-    {
-      const res=await axios.post(`${BACKEND_URL}/api/student/poll`,{
-        pollid,
-        option:responses[pollid],
-        reason:reasons[pollid]
+    try{
+      console.log(responses[pollid])
+      if(reasons[pollid])
+      {
+        const res=await axios.post(`${BACKEND_URL}/api/student/poll`,{
+          pollid,
+          option:responses[pollid],
+          reason:reasons[pollid]
+    
+        },{
+          headers:{
+            Authorization:localStorage.getItem("studenttoken")
+          }
+        })
+        console.log(res)
+    
+      }
+      else{
   
-      },{
-        headers:{
-          Authorization:localStorage.getItem("studenttoken")
-        }
-      })
-      console.log(res)
+        const res=await axios.post(`${BACKEND_URL}/api/student/poll`,{
+          pollid,
+          option:responses[pollid],
+    
+        },{
+          headers:{
+            Authorization:localStorage.getItem("studenttoken")
+          }
+        })
+        console.log(res)
   
-    }
-    else{
+      }
 
-      const res=await axios.post(`${BACKEND_URL}/api/student/poll`,{
-        pollid,
-        option:responses[pollid],
-  
-      },{
-        headers:{
-          Authorization:localStorage.getItem("studenttoken")
-        }
-      })
-      console.log(res)
 
     }
-    setFlag(!flag)
+    catch{
+      alert("error")
+    }
+    finally{
+      setFlag(!flag)
+    }
+   
+  
 
     
    

@@ -239,3 +239,21 @@ export function pollMailPortion(email:string, title:string,name:string){
 
 }
 
+const now = new Date();
+
+const formatter = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Kolkata',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit'
+});
+
+
+const [{ value: day },,{ value: month },,{ value: year },,{ value: hour },,{ value: minute },,{ value: second }] = formatter.formatToParts(now);
+
+
+export const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+
