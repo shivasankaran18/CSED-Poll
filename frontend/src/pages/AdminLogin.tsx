@@ -26,6 +26,7 @@ export function AdminLogin() {
       alert("error")
     }
     else{
+      console.log(res.data)
     localStorage.setItem("admintoken",res.data.token)
     navigate("/admin/ongoing")
     

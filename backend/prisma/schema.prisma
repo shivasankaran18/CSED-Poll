@@ -17,7 +17,7 @@ datasource db {
 
 model Student{
   rollno String @id
-  email String @unique @default("yashwanthviratkohli@gmail.com")
+  email String @unique 
   name String
   password String
   dept String
@@ -52,13 +52,14 @@ model Poll{
   description String
   options pollOptions[]
   Instant Boolean @default(true)
-  sttime String?
-  stdate String?
+  sttime String
+  stdate String
   type String @default("General")
   count Int
   completed Boolean @default(false)
   polled  Polled[]
   createdby String
+  autoDelete Boolean @default(true)
   admin Admin @relation(fields: [createdby],references: [email],onDelete: Cascade)
 }
 model Polled{
@@ -70,6 +71,17 @@ model Polled{
   optionClicked pollOptions @relation(fields: [option],references: [id],onDelete: Cascade)
   student Student @relation(fields: [studrollno],references: [rollno],onDelete: Cascade)
   poll Poll @relation(fields: [pollid],references: [id],onDelete: Cascade)
+}
+
+
+model OTPRequest{
+  id Int @id @default(autoincrement())
+  email String @unique
+  otp Int
+  expires DateTime
+
+
+
 }
 
 

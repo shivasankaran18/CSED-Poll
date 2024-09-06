@@ -9,7 +9,11 @@ import {  StudentOngoing } from './pages/StudentOngoing'
 import { StudentCompleted } from './pages/StudentCompleted'
 import { AdminOngoing } from './pages/AdminOngoing'
 import { AdminCompleted } from './pages/AdminCompleted'
-import { PollDetails } from './pages/PollDetails'
+import { AdminPollDetails } from './pages/AdminPollDetails'
+import { StudentPollDetails } from './pages/StudentPollDetails'
+import { StudentChangePasssowrdLogin } from './pages/StudentChangePasswordLogin'
+import { StudentChangePasswordOTP } from './pages/StudentChangePasswordOtp'
+import { StudentChangePassword } from './pages/StudentChangePassword'
 
 
 function App() {
@@ -25,7 +29,11 @@ function App() {
         <Route path="/student/completed" element={<StudentCompleted />}></Route>
         <Route path="/admin/ongoing" element={<AdminOngoing />}></Route>
         <Route path="/admin/completed" element={<AdminCompleted />}></Route>
-        <Route path="/polldetails" element={<PollDetails />}></Route>
+        <Route path="/admin/polldetails" element={<AdminPollDetails />}></Route>
+        <Route path="/student/polldetails" element={<StudentPollDetails />}></Route>
+        <Route path="/student/changepassword/login" element={<StudentChangePasssowrdLogin />}></Route>
+        <Route path="/student/changepassword/otp" element={<StudentChangePasswordOTP />}></Route>
+        <Route path="/student/changepassword/password" element={<StudentChangePassword />}></Route>
 
 
 

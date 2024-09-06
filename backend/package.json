@@ -14,13 +14,16 @@
     "@prisma/client": "^5.19.1",
     "@types/express": "^4.17.21",
     "@types/node": "^22.5.3",
+    "@types/nodemailer": "^6.4.15",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.15",
     "nodemon": "^3.1.4",
     "prisma": "^5.19.1",
     "ts-node": "^10.9.2",
+    "wbm": "^1.1.16",
     "zod": "^3.23.8"
   },
   "devDependencies": {

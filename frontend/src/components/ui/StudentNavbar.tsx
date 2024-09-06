@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 const routes = [
-  { name: 'Ongoing Polls', path: '/ongoing-polls' },
-  { name: 'Completed Polls', path: '/completed-polls' },
+  { name: 'Ongoing Polls', path: '/student/ongoing' },
+  { name: 'Completed Polls', path: '/student/completed' },
 ]
 
 export function Navbar({val}:{val:string}) {
@@ -25,7 +25,7 @@ export function Navbar({val}:{val:string}) {
   }, [])
 
   const handleLogout = () => {
-    console.log('Logging out...')
+    localStorage.removeItem("studenttoken")
     navigate('/')
     setIsOpen(false)
   }

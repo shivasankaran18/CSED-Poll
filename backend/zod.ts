@@ -13,6 +13,7 @@ export const studentSignUp = zod.object({
     section : zod.string(),
     contactno : zod.string(),
     year: zod.number().int(),
+    email:zod.string().endsWith(".cse2023@citchennai.net")
 })
 
 export const adminSignUp = zod.object({
@@ -33,16 +34,32 @@ export const createPoll = zod.object({
     description:zod.string(),
     options: zod.array(string()),
     reasonsNeeded : zod.array(boolean()),
-    instant: zod.boolean(),
     stdate : zod.string().optional(),
     sttime : zod.string().optional(),
     type : zod.string(),
+    autoDelete:zod.boolean(),
+    polltype:zod.string()
 })
 
 export const studentpoll = zod.object({
     pollid:zod.number().int(),
-    studrollno : zod.string(),
     reason:zod.string().optional(),
     option : zod.number().int()
+})
+
+export const studentchangepasswordlogin=zod.object({
+    email:zod.string().endsWith(".cse2023@citchennai.net")
+})
+
+export const studentchangepasswordotp=zod.object({
+    email:zod.string().endsWith(".cse2023@citchennai.net"),
+    otp:zod.string().length(6)
+})
+
+export const studentchangepassword=zod.object({
+    email:zod.string().endsWith(".cse2023@citchennai.net"),
+    password:zod.string().min(8)
+
+
 })
 

@@ -15,7 +15,7 @@ const adminRegister = async(req:any,res:any) =>{
         console.log(body)
         const parsing = adminSignUp.safeParse(body);
         if(!parsing.success){
-            return res.json({success:false,message:"Type mismatch"});
+            return res.status(500).json({message:"Type mismatch"});
         }
         const password = body.password;
         const salt = await bcrypt.genSalt(10);
@@ -30,11 +30,11 @@ const adminRegister = async(req:any,res:any) =>{
             }
         })
         const token = createToken(body.email);
-        return res.json({success:true,message:"Admin Created",token:"Bearer "+token})
+        return res.status(200).json({success:true,message:"Admin Created",token:"Bearer "+token})
     }
     catch(err){
         console.log(err);
-        return res.json({success:false,message:err});
+        return res.status(500).json({message:err});
     }
 }
 

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { GraduationCap, User, Lock } from 'lucide-react'
 import axios from 'axios'
 import { BACKEND_URL } from '../../config.ts'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export function StudLogin() {
   const [studRollno, setStudRolno] = useState('');
@@ -88,7 +88,7 @@ export function StudLogin() {
         </div>
 
         <div className="mt-6 text-center">
-          <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password or Change Password?</a>
+          <Link to="/student/changepassword/login" className="text-sm text-blue-600 hover:underline">Forgot password or Change Password?</Link>
         </div>
       </motion.div>
     </div>
