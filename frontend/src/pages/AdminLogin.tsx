@@ -90,6 +90,7 @@ export function AdminLogin() {
               variant={"admin"}
               className="w-full text-lg sm:text-base"
               onClick={handleSubmit}
+              disabled={flag}
             >
               {flag?"Logging..":"Log In"}
             </Button>
