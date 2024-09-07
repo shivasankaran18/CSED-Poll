@@ -214,7 +214,7 @@ export const getPolls = async(req:any,res:any)=>{
         const polledPollIds = polledPolls.map(polled => polled.pollid);
         const polled = allPolls.filter(poll => polledPollIds.includes(poll.id));
         const unpolled = allPolls.filter(poll => !polledPollIds.includes(poll.id));
-        return  res.status(200).json({polled:polled,unpolled:unpolled})
+        return  res.status(200).json({polled:polled,unpolled:unpolled,polledPolls})
     }catch(err){
         console.log(err);
         return res.status(500).json({message:err})

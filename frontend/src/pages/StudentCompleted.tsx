@@ -14,6 +14,7 @@ export  function StudentCompleted() {
   const [optionsPolled,setOptionsPolled]=useState<{}>()
   const [loading,setLoading]=useState<boolean>(true)
 
+
   useEffect(() => {
 
     axios.get(`${BACKEND_URL}/api/student/polls`,{
@@ -23,9 +24,9 @@ export  function StudentCompleted() {
     }).then(data => {
       console.log(data.data)
       let temp:any={}
-      data.data.polled.map((poll:any)=>{
-        console.log(poll.polled)
-       temp[poll.id]=poll.polled[0].option
+      data.data.polledPolls.map((poll:any)=>{
+       
+       temp[poll.pollid]=poll.option
       })
       console.log(temp)
       setCompletedPolls(data.data.polled); 
